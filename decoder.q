@@ -85,6 +85,11 @@ if[`files in key .proc.params;
  writedown[];
  ];
 
+/ if not running in debug mode, exit
+if[not `debug in key .proc.params;
+ exit 0;
+ ];
+
 /
 Example Usage
 
