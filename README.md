@@ -231,7 +231,7 @@ The processing of files is called in a similar manner to other TorQ processes (n
 . setenv.sh
 q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
 ```
-With the files in the directory of the final argument as .gz files; the above will process all files with the currency pair code 6S in the filename.
+The above will process the sample logfile provided and save the data to `cme_db`.
 To load the hdb simply run from your TorQ directory `q hdb`.
 
 https://github.com/AquaQAnalytics/TorQ
