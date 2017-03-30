@@ -228,7 +228,7 @@ You should have a of combination each directories content included in the deploy
 
 The processing of files is called in a similar manner to other TorQ processes (note environment variables must be set with setenv.sh below):
 ```
-. setenvh.sh
+. setenv.sh
 q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
 ```
 With the files in the directory of the final argument as .gz files; the above will process all files with the currency pair code 6S in the filename.
