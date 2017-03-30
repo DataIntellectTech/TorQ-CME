@@ -1,4 +1,4 @@
-.proc.book{[qt]
+.proc.book:{[qt]
   `..book upsert ([] date:"d"$(); time:"p"$(); sym:"s"$(); side:"s"$(); level:"i"$(); orders:"i"$(); size:"f"$(); price:"f"$(); msgseq:"i"$(); rptseq:"i"$();  matchevent:"i"$());
 
   bbk:(`oc`qty`pc)!(10#0ni;10#0nf;10#0nf);      /bk in fmt order count, qty, price
