@@ -5,7 +5,9 @@
 .proc.loadf[getenv[`KDBCODE],"/parse.q"];
 
 / load additional code scripts
-.proc.loadf[getenv[`KDBCODE],"/wide_book.q"];
+$[`tallbook in key .proc.params;
+  .proc.loadf[getenv[`KDBCODE],"/tall_book.q"];
+  .proc.loadf[getenv[`KDBCODE],"/wide_book.q"]];
 .proc.loadf[getenv[`KDBCODE],"/schema.q"];
 .proc.loadf[getenv[`KDBCODE],"/util.q"];
 .proc.loadf[getenv[`KDBCODE],"/write.q"];
