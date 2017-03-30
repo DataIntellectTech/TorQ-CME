@@ -79,7 +79,6 @@ sym:@[get;hsym `$getenv[`DBDIR],"/sym";{.lg.w[`load;"Failed to load sym file"]}]
 
 if[`files in key .proc.params;
  .proc.logfile each hsym `$.proc.params[`files];
- .raw.quote:update MDEntryPx*DisplayFactor from .raw.quote lj select first DisplayFactor by Symbol from .raw.definitions;
  .proc.book .raw.quote;
  / generate user-friendly trade table
  trade:delete DisplayFactor from update price*DisplayFactor from ?[.raw.trade;();0b;.schema.trfieldmaps] lj `sym xcol select underlying:first SecurityGroup,first DisplayFactor by Symbol from .raw.definitions;
