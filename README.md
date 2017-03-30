@@ -76,17 +76,17 @@ A market data incremental refresh message contains information on quotes and tra
 ```
 ## Case Study
 
-To create the narrow book, define four schemas to store the data parsed from the raw FIX message format:
+To create the book, define four schemas to store the data parsed from the raw FIX message format:
 
 1. Market Data Security Status (msgType = f)
 ```
-q)meta .schema.status
+q)meta rawstatus
 c                    | t f a
 ---------------------| -----
 MsgSeqNum            | i
 TransactTime         | p
 TradingDate          | d
-MatchEventIndicator  |
+MatchEventIndicator  | i
 SecurityGroup        | s
 SecurityTradingStatus| s
 HaltReasonChar       | s
@@ -95,7 +95,7 @@ SecurityTradingEvent | s
 
 2. Quote (Market Data Incremental Refresh where MDEntryType = 0/1)
 ```
-q)meta quote
+q)meta rawquote
 c                  | t f a
 -------------------| -----
 date               | d
@@ -103,7 +103,7 @@ Symbol             | s   p
 TradeDate          | d
 MsgSeqNum          | i
 TransactTime       | p
-MatchEventIndicator| B
+MatchEventIndicator| i
 MDUpdateAction     | s
 MDEntryType        | s
 SecurityID         | i
@@ -112,12 +112,11 @@ MDEntryPx          | f
 MDEntrySize        | f
 NumberOfOrders     | i
 MDPriceLevel       | i
-DisplayFactor      | f
 ```
 
 3. Trade (Market Data Incremental Refresh where MDEntryType = 2)
 ```
-q)meta trade
+q)meta rawtrade
 c                  | t f a
 -------------------| -----
 date               | d
@@ -125,7 +124,7 @@ Symbol             | s   p
 TradeDate          | d
 MsgSeqNum          | i
 TransactTime       | p
-MatchEventIndicator| B
+MatchEventIndicator| i
 MDUpdateAction     | s
 SecurityID         | i
 RptSeq             | i
@@ -137,12 +136,12 @@ AggressorSide      | s
 
 4. Security Definition (msgType = d)
 ```
-q)meta definitions
+q)meta rawdefinitions
 c                   | t f a
 --------------------| -----
 TradeDate           | d
 LastUpdateTime      | p
-MatchEventIndicator | B
+MatchEventIndicator | i
 SecurityUpdateAction| s
 MarketSegmentID     | i
 Symbol              | s
@@ -159,11 +158,15 @@ DisplayFactor       | f
 
 Once data has been parsed and placed in the appropriate tables it is possible to generate a book of quotes and trades. Depending on user requirements, there are scripts to build both a wide book and a tall book. 
 
-The wide book would store a nested list of prices and sizes up to the maximum market depth at each point in time for the data. The user may then query the data over a time range or an exact time to generate a view of the book at that point. 
+The wide book format stores a nested list of prices and sizes up to the maximum market depth at each point in time for the data. The user may then query the data over a time range or an exact time to generate a view of the book at that point. 
 
-In contrast, the tall book stores only what has changed on each update for the appropriate side. The table is thus smaller, since only the level which has been changed (and those below in the case of a "NEW" or "DELETE" MDUpdateAction) on a single side must be changed with each message. A sample of the book, showing a single entry at level 3, and an appropriate query to return a book for a single sym at a certain time are show below:
+In contrast, the tall book stores only what has changed on each update for the appropriate side. The table is thus smaller, since only the level which has been changed (and those below in the case of a "NEW" or "DELETE" MDUpdateAction) on a single side must be changed with each message. A sample of the tall book, showing a single entry at level 3, and an appropriate query to return a book for a single sym at a certain time are show below:
 
 ```
+~/deploy$ q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log -debug -tallbook
+	...
+	...
+	...
 q)book
 date       time                          sym  side  level orders size price msgseq rptseq matchevent
 ----------------------------------------------------------------------------------------------------
@@ -191,6 +194,29 @@ BID   8    | 2017.01.01 2017.01.01D00:31:33.384676725 6SZ6 11     36   10208 206
 BID   9    | 2017.01.01 2017.01.01D00:31:33.384676725 6SZ6 9      26   10207 2060   358920 132
 BID   10   | 2017.01.01 2017.01.01D03:32:25.585326361 6SZ6 5      21   10205 3737   358923 132
 ..
+```
+
+Similarly, a sample of the wide book is shown below
+
+```
+~/deploy$ q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log -debug
+	...
+	...
+	...
+~/deploy$ q hdb
+q)10 sublist select from book
+date       sym  time                          bprice                                                                bsize                      aprice                                      ..
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------..
+2017.01.01 6SH7 2017.01.01D12:47:06.545756971 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 3 5 6 4  4  4  4  3  36 11 1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
+2017.01.01 6SH7 2017.01.01D04:07:46.761071942 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 1.0258 5 6 4 37 4  3  11 36 11 53 1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
+2017.01.01 6SH7 2017.01.01D01:18:39.077345929 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 6 6 4 4  37 3  3  11 36 11 1.0274 1.0275 1.0276 1.0277 1.0278 1.0279 1...
+2017.01.01 6SH7 2017.01.01D00:07:02.427603074 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 5 3 3  3  11 3  11 3  3  1.0272 1.0274 1.0275 1.0276 1.0277 1.0278 1...
+2017.01.01 6SH7 2017.01.01D04:24:36.588750868 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 6 4 4  37 4  3  11 36 11 1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
+2017.01.01 6SH7 2017.01.01D09:32:24.001122966 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 3 5 6 4  4  4  4  3  36 11 1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
+2017.01.01 6SH7 2017.01.01D08:47:15.473108304 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 1.0258 3 5 5 3  3  3  3  3  11 3  1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
+2017.01.01 6SH7 2017.01.01D10:32:35.416123137 1.0269 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  3 3 5 5  3  3  11 3  11 3  1.0274 1.0275 1.0276 1.0277 1.0278 1.0279 1...
+2017.01.01 6SH7 2017.01.01D11:05:35.588591217 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 1.0258 1.0257 5 5 3 3  3  11 3  11 3  3  1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
+2017.01.01 6SH7 2017.01.01D05:57:25.396454768 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 6 4 4  37 12 3  11 36 3  1.0274 1.0275 1.0276 1.0277 1.0278 1.0279 1...
 ```
 
 ## Getting Started:
