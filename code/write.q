@@ -21,9 +21,11 @@ write_partitioned:{[tbl;dt]
 
 / Write the data down splayed to a directory
 write_splay:{[tbl;dt]
-  (n:`$5_string tbl) set select from tbl;
+  /(n:`$5_string tbl) set select from tbl;
+  n:select from tbl;
   .lg.o[`endofday;"Saving ",string tbl];
-  (hsym `$"/" sv (dbdir;string n;"")) set .Q.en[hsym `$dbdir] value tbl
+  tn:(string tbl) except ".";
+  (hsym `$"/" sv (dbdir;tn;"")) set .Q.en[hsym `$dbdir] n
  };
 
 

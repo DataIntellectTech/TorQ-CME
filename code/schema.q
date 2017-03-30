@@ -80,7 +80,10 @@ trfieldmaps:(!) . flip (
   `price`MDEntryPx;
   `size`MDEntrySize;
   `orders`NumberOfOrders;
-  `side`AggressorSide
+  `side`AggressorSide;
+  `msgseq`MsgSeqNum;
+  `rptseq`RptSeq;
+  `matchevent`MatchEventIndicator
  );
 
 / field mappings for user-friendly quote/book table
@@ -91,5 +94,8 @@ qtfieldmaps:(!) . flip (
   `bprice`bprice;
   `bsize`bsize;
   `aprice`aprice;
-  `asize`asize
+  `asize`asize;
+  `msgseq`MsgSeqNum;
+  `rptseq`RptSeq;
+  `matchevent`MatchEventIndicator
  );
