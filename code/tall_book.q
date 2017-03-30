@@ -5,7 +5,7 @@
   abk:(`oc`qty`pc)!(10#0ni;10#0nf;10#0nf);      /define bid and ask books
   ebk:(`BID`OFFER)!(bbk;abk);               /starting empty book
 
-  bdict:(enlist `)!enlist ebk;                  /book state maintaining dictionary
+  bdict::(enlist `)!enlist ebk;                  /book state maintaining dictionary
   
   bk0:{[x;y;z;bk] a:.[bk;(z;::;1_ml);:;-1_'bk[z;;ml:x+til 10-x]];.[a;(z;::;x);:;y]};     /enter data y at position x on side z in book bk and shunt down
   bk1:{[x;y;z;bk] .[bk;(z;::;x);:;y]};                                                   /update at position x with data y on side z
