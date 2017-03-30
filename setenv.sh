@@ -6,7 +6,7 @@ export KDBCODE=${TORQHOME}/code
 export KDBLOG=${TORQHOME}/logs
 export KDBHTML=${TORQHOME}/html
 export KDBLIB=${TORQHOME}/lib
-export DBDIR=${TORQHOME}/cme_db
+export DBDIR=${TORQHOME}/hdb
 
 # if using the email facility, modify the library path for the email lib depending on OS
 # e.g. linux:
