@@ -232,6 +232,6 @@ The processing of files is called in a similar manner to other TorQ processes (n
 q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
 ```
 The above will process the sample logfile provided and save the data to `cme_db`.
-To load the hdb simply run from your TorQ directory `q hdb`.
+To load the hdb simply run from your TorQ directory `q cme_db`.
 
 https://github.com/AquaQAnalytics/TorQ
