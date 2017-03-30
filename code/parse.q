@@ -40,7 +40,7 @@
    {"F"$x};			/AMT
    {"F"$x};			/FLOAT
    {"F"$x};			/PRICE
-   {$[0<count x;2 sv "1"=x;0]};		/BOOLEANLIST
+   {`byte$$[0<count x;2 sv "1"=x;0]};		/BOOLEANLIST
    {`$x};			/SYMBOL
    {1970.01.01+"I"$x}		/EPOCHDATE
   );

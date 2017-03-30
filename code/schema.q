@@ -5,7 +5,7 @@
 definitions:([] 
  TradeDate:`date$();
  LastUpdateTime:`timestamp$();
- MatchEventIndicator:`int$();
+ MatchEventIndicator:`byte$();
  SecurityUpdateAction:`$();
  MarketSegmentID:`int$();
  Symbol:`$();
@@ -23,7 +23,7 @@ quote:([]
  TradeDate:`date$();
  MsgSeqNum:`int$();
  TransactTime:`timestamp$();
- MatchEventIndicator:`int$();
+ MatchEventIndicator:`byte$();
  MDUpdateAction:`$();
  MDEntryType:`$();
  SecurityID:`int$();
@@ -38,7 +38,7 @@ trade:([]
  TradeDate:`date$();
  MsgSeqNum:`int$();
  TransactTime:`timestamp$();
- MatchEventIndicator:`int$();
+ MatchEventIndicator:`byte$();
  MDUpdateAction:`$();
  SecurityID:`int$();
  Symbol:`$();
@@ -52,7 +52,7 @@ status:([]
  MsgSeqNum:`int$();
  TransactTime:`timestamp$();
  TradingDate:`date$();
- MatchEventIndicator:`int$();
+ MatchEventIndicator:`byte$();
  SecurityGroup:`$();
  SecurityTradingStatus:`$();
  HaltReasonChar:`$();
