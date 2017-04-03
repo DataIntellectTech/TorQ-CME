@@ -63,6 +63,47 @@ A sample file is available [here](https://github.com/jonathonmcmurray/cme/blob/m
 - The parser can only process raw and gzipped CME MDP 3.0 FIX log files, if the data is compressed in a different format the files will need to be manually decompressed.
 - The parser cannot process real time data, it is designed to parse CME FIX MDP 3.0 historical datamine logfiles. If you would like information on how to parse, store and query realtime cme data, please contact [AquaQ](mailto:info@aquaq.co.uk).
 
+## Getting Started:
+
+- You must first download two packages, TorQ and our FIX message package. The FIX package should be placed on top of the base TorQ package.
+	
+1. Make a directory to check the git repos into, and a directory to deploy the system to.
+
+		~/cme$ mkdir git deploy
+		~cme$ ls
+		deploy  git
+	
+2. Change to the git directory and clone the FIX parser and TorQ repositories.
+
+		~/cme$ cd git
+		~/cme/git$ git clone https://github.com/AquaQAnalytics/TorQ-CME.git
+		~/cme/git$ git clone https://github.com/AquaQAnalytics/TorQ.git
+		~/cme/git$ ls
+		cme  TorQ
+	
+3. Change to the deploy directory and copy the contents of TorQ into it.
+
+		~/cme/git$ cd ../deploy/
+ 		~/cme/deploy$ cp -r ../git/TorQ/* ./
+	
+4. Copy the contents of the FIX parsers repo into the same directory, allowing overwrites.
+
+		~/cme/deploy$ cp -r ../git/TorQ-CME/* ./
+
+You should have a of combination each directories content included in the deploy direcotry:
+
+	~/cme/deploy$ ls
+	aquaq-torq-brochure.pdf  code  config  decoder.q  docs  html  lib  LICENSE  logs  mkdocs.yml  README.md  sample  setenv.sh  spec  tests  torq.q
+	
+
+The processing of files is called in a similar manner to other TorQ processes (note environment variables must be set with setenv.sh below):
+```
+~/cme/git$ . setenv.sh
+~/cme/git$ q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
+```
+The above will process the sample logfile provided and save the data to `cme_db`.
+To load the hdb simply run from your TorQ directory `q cme_db`.
+
 ## Data Handling
 The FIX message categories within the CME needed to maintain market information are "d" and "X" - security definition and market data incremental refresh, respectively. The security information includes the standard FIX header, and then identifies the instrument and its features, including those used in maintaining the book (MarketDepth:264, used to maintain book depth, and DisplayFactor:9787, used to convert the FIX message prices to real market values). These messages may contain multiple repeated blocks, e.g. for multiple underlying securities in spread instruments, which must be accounted for in processing. An example definition message is shown below.
 ```
@@ -213,51 +254,10 @@ date       sym  time                          bprice                            
 2017.01.01 6SH7 2017.01.01D00:07:02.427603074 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 5 3 3  3  11 3  11 3  3  1.0272 1.0274 1.0275 1.0276 1.0277 1.0278 1...
 2017.01.01 6SH7 2017.01.01D04:24:36.588750868 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 6 4 4  37 4  3  11 36 11 1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
 2017.01.01 6SH7 2017.01.01D09:32:24.001122966 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 3 5 6 4  4  4  4  3  36 11 1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
-2017.01.01 6SH7 2017.01.01D08:47:15.473108304 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 1.0258 3 5 5 3  3  3  3  3  11 3  1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
 2017.01.01 6SH7 2017.01.01D10:32:35.416123137 1.0269 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  3 3 5 5  3  3  11 3  11 3  1.0274 1.0275 1.0276 1.0277 1.0278 1.0279 1...
 2017.01.01 6SH7 2017.01.01D11:05:35.588591217 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 1.0258 1.0257 5 5 3 3  3  11 3  11 3  3  1.0272 1.0273 1.0274 1.0275 1.0276 1.0277 1...
 2017.01.01 6SH7 2017.01.01D05:57:25.396454768 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 6 4 4  37 12 3  11 36 3  1.0274 1.0275 1.0276 1.0277 1.0278 1.0279 1...
 ```
 
-## Getting Started:
-
-- You must first download two packages, TorQ and our FIX message package. The FIX package should be placed on top of the base TorQ package.
-	
-1. Make a directory to check the git repos into, and a directory to deploy the system to.
-
-		~/cme$ mkdir git deploy
-		~cme$ ls
-		deploy  git
-	
-2. Change to the git directory and clone the FIX parser and TorQ repositories.
-
-		~/cme$ cd git
-		~/cme/git$ git clone https://github.com/AquaQAnalytics/TorQ-CME.git
-		~/cme/git$ git clone https://github.com/AquaQAnalytics/TorQ.git
-		~/cme/git$ ls
-		cme  TorQ
-	
-3. Change to the deploy directory and copy the contents of TorQ into it.
-
-		~/cme/git$ cd ../deploy/
- 		~/cme/deploy$ cp -r ../git/TorQ/* ./
-	
-4. Copy the contents of the FIX parsers repo into the same directory, allowing overwrites.
-
-		~/cme/deploy$ cp -r ../git/TorQ-CME/* ./
-
-You should have a of combination each directories content included in the deploy direcotry:
-
-	~/cme/deploy$ ls
-	aquaq-torq-brochure.pdf  code  config  decoder.q  docs  html  lib  LICENSE  logs  mkdocs.yml  README.md  sample  setenv.sh  spec  tests  torq.q
-	
-
-The processing of files is called in a similar manner to other TorQ processes (note environment variables must be set with setenv.sh below):
-```
-. setenv.sh
-q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
-```
-The above will process the sample logfile provided and save the data to `cme_db`.
-To load the hdb simply run from your TorQ directory `q cme_db`.
 
 https://github.com/AquaQAnalytics/TorQ
