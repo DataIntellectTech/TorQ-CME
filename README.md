@@ -79,7 +79,7 @@ A sample file is available [here](https://github.com/jonathonmcmurray/cme/blob/m
 		~/cme/git$ git clone https://github.com/AquaQAnalytics/TorQ-CME.git
 		~/cme/git$ git clone https://github.com/AquaQAnalytics/TorQ.git
 		~/cme/git$ ls
-		cme  TorQ
+		TorQ-CME  TorQ
 	
 3. Change to the deploy directory and copy the contents of TorQ into it.
 
