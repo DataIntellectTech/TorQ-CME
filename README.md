@@ -101,8 +101,8 @@ The processing of files is called in a similar manner to other TorQ processes (n
 ~/cme/git$ . setenv.sh
 ~/cme/git$ q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
 ```
-The above will process the sample logfile provided and save the data to `cme_db`.
-To load the hdb simply run from your TorQ directory `q cme_db`.
+The above will process the sample logfile provided and save the data to `hdb`.
+To load the hdb simply run from your TorQ directory `q hdb`.
 
 ## Data Handling
 The FIX message categories within the CME needed to maintain market information are "d" and "X" - security definition and market data incremental refresh, respectively. The security information includes the standard FIX header, and then identifies the instrument and its features, including those used in maintaining the book (MarketDepth:264, used to maintain book depth, and DisplayFactor:9787, used to convert the FIX message prices to real market values). These messages may contain multiple repeated blocks, e.g. for multiple underlying securities in spread instruments, which must be accounted for in processing. An example definition message is shown below.
