@@ -65,7 +65,7 @@ A sample file is available [here](https://github.com/jonathonmcmurray/cme/blob/m
 
 ## Getting Started:
 
-- You must first download two packages, TorQ and our FIX message package. The FIX package should be placed on top of the base TorQ package.
+- These instructions will give directions on downloading TorQ and our FIX message package. The FIX package will be placed on top of the base TorQ package.
 	
 1. Make a directory to check the git repos into, and a directory to deploy the system to.
 
