@@ -13,3 +13,5 @@ export DBDIR=${TORQHOME}/hdb
 # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$KDBLIB/l[32|64]
 # e.g. osx:
 # export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$KDBLIB/m[32|64]
+
+alias cmedecoder='q ${TORQHOME}/torq.q -load ${TORQHOME}/code/processes/cmedecoder.q -proctype cmedecoder -procname cmedecoder'

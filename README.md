@@ -99,7 +99,13 @@ You should have a of combination each directories content included in the deploy
 The processing of files is called in a similar manner to other TorQ processes (note environment variables must be set with setenv.sh below):
 ```
 ~/cme/git$ . setenv.sh
-~/cme/git$ q torq.q -load decoder.q -proctype decoder -procname decoder -files sample/sample_20170101.log
+~/cme/git$ cmedecoder -files sample/sample_20170101.log
+```
+
+`cmedecoder` is an alias defined in setenv.sh for convenience. The expanded version of the same command is shown below:
+
+```
+~/cme/git$ q torq.q -load code/process/cmedecoder.q -proctype cmedecoder -procname cmedecoder -files sample/sample_20170101.log
 ```
 The above will process the sample logfile provided and save the data to `hdb`.
 To load the hdb simply run from your TorQ directory `q hdb`.
