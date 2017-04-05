@@ -4,7 +4,7 @@
 .fix.incr.headerkeys:`TradeDate`MsgSeqNum`SendingTime`TransactTime`MatchEventIndicator`NoMDEntries
 .fix.incr.cutkey:`MDUpdateAction
 
-\d .proc
+\d .cme
 
 / process a single quote
 singlequote:{[msg]
@@ -19,7 +19,7 @@ singletrade:{[msg]
  } 
 
 / dictionary of handlers for incremental message MDEntryTypes
-.fix.incr.handlers:`BID`OFFER`IMPLIED_BID`IMPLIED_OFFER`TRADE!(.proc.singlequote;.proc.singlequote;.proc.singlequote;.proc.singlequote;.proc.singletrade);
+.fix.incr.handlers:`BID`OFFER`IMPLIED_BID`IMPLIED_OFFER`TRADE!(.cme.singlequote;.cme.singlequote;.cme.singlequote;.cme.singlequote;.cme.singletrade);
 
 / process a single incremental refresh message - pass to quote or trade handler, as applicable
 singleincr:{[msg]

@@ -1,4 +1,4 @@
-.proc.book:{[tab]
+.cme.widebook:{[tab]
  t:update MDEntryPx*DisplayFactor from tab lj select first DisplayFactor by Symbol from .raw.definitions;
  / extract prices & sizes from book column
  t:update bprice:{exec price from x where side=`BID}'[book],

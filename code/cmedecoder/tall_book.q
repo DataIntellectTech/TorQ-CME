@@ -24,7 +24,7 @@ qtf:{[x;d] nbk:mdua[x[`MDUpdateAction]][-1+x`MDPriceLevel;(x`NumberOfOrders;x`MD
   bdict[x`Symbol]::nbk
   };
 
-.proc.book:{[qt]
+.cme.tallbook:{[qt]
   d:exec Symbol!MarketDepth from .raw.definitions;
   setbook[d:max value d];
   `..book upsert ([] date:"d"$(); time:"p"$(); sym:"s"$(); side:"s"$(); level:"i"$(); orders:"i"$(); size:"f"$(); price:"f"$(); msgseq:"i"$(); rptseq:"i"$();  matchevent:"i"$());

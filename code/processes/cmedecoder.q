@@ -1,18 +1,6 @@
-/ parse params into dict (allowing "debug" mode)
-/.params:.Q.opt .z.x
+\d .cme
 
-/ load dictionary with FIX msg tags & table with fields
-.proc.loadf[getenv[`KDBCODE],"/parse.q"];
-
-/ load additional code scripts
-$[`tallbook in key .proc.params;
-  .proc.loadf[getenv[`KDBCODE],"/tall_book.q"];
-  .proc.loadf[getenv[`KDBCODE],"/wide_book.q"]];
-.proc.loadf[getenv[`KDBCODE],"/schema.q"];
-.proc.loadf[getenv[`KDBCODE],"/util.q"];
-.proc.loadf[getenv[`KDBCODE],"/write.q"];
-
-\d .proc
+.cme.book:$[`tallbook in key .proc.params;.cme.tallbook;.cme.widebook];
 
 / load per-message type scripts
 .proc.loaddir[getenv[`KDBCODE],"/msgs/"];
@@ -31,9 +19,9 @@ msg:{
     (d[`name];val)
    } each flip "I=\001"0:x;
    / check if msghandler exists
-   $[msg[`MsgType] in key .proc;
+   $[msg[`MsgType] in key .cme;
       / if exists, pass & catch errors
-      @[value;(.proc[msg[`MsgType]];msg);
+      @[value;(.cme[msg[`MsgType]];msg);
            {[msg;x]
             .lg.w[`msg] each .util.strdict msg;
             .lg.e[`msg;"Error parsing message: ",x];}[msg]];
@@ -80,8 +68,8 @@ sym:@[get;hsym `$getenv[`DBDIR],"/sym";{.lg.w[`load;"Failed to load sym file"]}]
 
 
 if[`files in key .proc.params;
- .proc.logfile each hsym `$.proc.params[`files];
- .proc.book .raw.quote;
+ .cme.logfile each hsym `$.proc.params[`files];
+ .cme.book .raw.quote;
  / generate user-friendly trade table
  trade:delete DisplayFactor from update price*DisplayFactor from ?[.raw.trade;();0b;.schema.trfieldmaps] lj `sym xcol select underlying:first SecurityGroup,first DisplayFactor by Symbol from .raw.definitions;
  writedown[];
@@ -95,5 +83,5 @@ if[not `debug in key .proc.params;
 /
 Example Usage
 
-> q torq.q -load decoder.q -proctype decoder -procname decoder -files /tmp/CME/CME_DATA/*6S*
-> q torq.q -load decoder.q -proctype decoder -procname decoder -files /tmp/CME/CME_DATA/xcme_md_6s_fut_20161012-r-00447.gz
+> q torq.q -load code/processes/cmedecoder.q -proctype cmedecoder -procname cmedecoder -files sample/sample_20170101.log
+> q torq.q -load code/processes/cmedecoder.q -proctype cmedecoder -procname cmedecoder -files /tmp/CME/CME_DATA/xcme_md_6s_fut_20161012-r-00447.gz

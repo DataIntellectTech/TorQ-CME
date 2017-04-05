@@ -1,6 +1,6 @@
 / functions to handle security definition messages
 
-\d .proc
+\d .cme
 
 / process SecurityDefintion msgs into definitions table
 SECURITY_DEFINITION:{[msg]
