@@ -20,7 +20,7 @@ msg:{
    } each flip "I=\001"0:x;
    / check if msghandler exists
    $[msg[`MsgType] in key .cme;
-      [msg:override[  msg];
+      [msg:override[msg];
        / if exists, pass & catch errors
       @[value;(.cme[msg[`MsgType]];msg);
            {[msg;x]
@@ -71,7 +71,7 @@ if[`files in key .proc.params;
  .cme.logfile each hsym `$.proc.params[`files];
  if[0 = count .raw.definitions;.lg.w[`definition;"No definitions table found. Cannot build accurate book"]];
  .cme.book .raw.quote;
- /generate user-friendly trade table
+ / generate user-friendly trade table
  trade:delete DisplayFactor from update price*DisplayFactor from ?[.raw.trade;();0b;.schema.trfieldmaps] lj `sym xcol select underlying:first SecurityGroup,first DisplayFactor by Symbol from .raw.definitions;
  writedown[];
  ];
