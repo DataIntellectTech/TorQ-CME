@@ -1,5 +1,5 @@
 .cme.widebook:{[tab]
- t:update MDEntryPx*DisplayFactor from tab lj select first DisplayFactor by Symbol from .raw.definitions;
+ t:update MDEntryPx^MDEntryPx*DisplayFactor from tab lj select first DisplayFactor by Symbol from .raw.definitions;
  / extract prices & sizes from book column
  t:update bprice:{exec price from x where side=`BID}'[book],
         bsize:{exec size from x where side=`BID}'[book],
@@ -22,7 +22,7 @@
     update level-lvl from (delete from state where level<=lvl,side=sd) where level>lvl,side=sd
    ]}\[([level:();side:()] price:();size:());MDUpdateAction;MDEntryPx;MDPriceLevel;MDEntrySize;MDEntryType;MatchEventIndicator;Symbol]
    by Symbol
-   from t;
+   from update SecurityDesc^Symbol from t;
    
    / delete temporary book column, 
    t:0!select by MsgSeqNum from delete book from t;

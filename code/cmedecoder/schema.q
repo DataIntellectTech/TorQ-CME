@@ -32,7 +32,8 @@ quote:([]
  MDEntryPx:`float$();
  MDEntrySize:`float$();
  NumberOfOrders:`int$();
- MDPriceLevel:`int$());
+ MDPriceLevel:`int$();
+ SecurityDesc:`$());
 
 trade:([] 
  TradeDate:`date$();
@@ -46,7 +47,8 @@ trade:([]
  MDEntryPx:`float$();
  MDEntrySize:`float$();
  NumberOfOrders:`int$();
- AggressorSide:`$());
+ AggressorSide:`$();
+ SecurityDesc:`$());
 
 status:([] 
  MsgSeqNum:`int$();

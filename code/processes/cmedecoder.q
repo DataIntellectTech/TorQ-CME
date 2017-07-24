@@ -20,15 +20,15 @@ msg:{
    } each flip "I=\001"0:x;
    / check if msghandler exists
    $[msg[`MsgType] in key .cme;
-      / if exists, pass & catch errors
+      [msg:override[  msg];
+       / if exists, pass & catch errors
       @[value;(.cme[msg[`MsgType]];msg);
            {[msg;x]
             .lg.w[`msg] each .util.strdict msg;
-            .lg.e[`msg;"Error parsing message: ",x];}[msg]];
+            .lg.e[`msg;"Error parsing message: ",x];}[msg]]];
       / if no handler, display warning with msg contents
       [.lg.w[`msg;"Missing msg handler: ",string msg[`MsgType]]
        .lg.w[`msg] each .util.strdict msg]];
-
 
  }
 
@@ -69,10 +69,11 @@ sym:@[get;hsym `$getenv[`DBDIR],"/sym";{.lg.w[`load;"Failed to load sym file"]}]
 
 if[`files in key .proc.params;
  .cme.logfile each hsym `$.proc.params[`files];
+ if[0 = count .raw.definitions;.lg.w[`definition;No definitions table found. Cannot build accurate book]];
  .cme.book .raw.quote;
- / generate user-friendly trade table
+ //generate user-friendly trade table
  trade:delete DisplayFactor from update price*DisplayFactor from ?[.raw.trade;();0b;.schema.trfieldmaps] lj `sym xcol select underlying:first SecurityGroup,first DisplayFactor by Symbol from .raw.definitions;
- writedown[];
+ /writedown[];
  ];
 
 / if not running in debug mode, exit

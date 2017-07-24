@@ -39,7 +39,8 @@ writedown:{
         x:((` sv' ``raw,/:tables[`.raw]),tables[]) except `heartbeat`logmsg;
 
 	/ Extract the date from the file being processed
-	d:distinct "D"$'8#'last each "_" vs' .proc.params[`files];
+	/d:distinct "D"$'8#'last each "_" vs' .proc.params[`files];
+	d:first distinct raze {exec date from x}each tables[] except `logmsg`heartbeat;
 
 	/ Conditional to determine how each table is saved down
 	/ Dictionary of write down methods held in schema.q in .schema.savetype	
