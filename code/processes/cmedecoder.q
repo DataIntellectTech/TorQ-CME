@@ -63,9 +63,8 @@ logfile:{[logfile]
 / load existing definitions table if it exists, print warning otherwise
 .lg.o[`load;"Attempting to load existing definitions & status tables"];
 sym:@[get;hsym `$getenv[`DBDIR],"/sym";{.lg.w[`load;"Failed to load sym file"]}]
-.raw.definitions:select from @[get;hsym `$getenv[`DBDIR],"/definitions/";{.lg.w[`load;"No definitions table found"];.schema.definitions}]
-.raw.status:select from @[get;hsym `$getenv[`DBDIR],"/status/";{.lg.w[`load;"No status table found"];.schema.status}]
-
+.raw.definitions:select from @[get;hsym `$getenv[`DBDIR],"/rawdefinitions/";{.lg.w[`load;"No definitions table found"];.schema.definitions}]
+.raw.status:select from @[get;hsym `$getenv[`DBDIR],"/rawstatus/";{.lg.w[`load;"No status table found"];.schema.status}]
 
 if[`files in key .proc.params;
  .cme.logfile each hsym `$.proc.params[`files];
