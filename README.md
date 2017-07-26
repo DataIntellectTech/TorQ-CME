@@ -90,7 +90,7 @@ A sample file is available [here](https://github.com/jonathonmcmurray/cme/blob/m
 
 		~/cme/deploy$ cp -r ../git/TorQ-CME/* ./
 
-You should have a of combination each directories content included in the deploy direcotry:
+You should have a combination of each directories content included in the deploy direcotry:
 
 	~/cme/deploy$ ls
 	aquaq-torq-brochure.pdf  code  config  decoder.q  docs  html  lib  LICENSE  logs  mkdocs.yml  README.md  sample  setenv.sh  spec  tests  torq.q
@@ -109,6 +109,16 @@ The processing of files is called in a similar manner to other TorQ processes (n
 ```
 The above will process the sample logfile provided and save the data to `hdb`.
 To load the hdb simply run from your TorQ directory `q hdb`.
+
+## Column Override
+Different CME datasets will contain different information and different tags. If you are loading a file in and it is missing a column that is expected you can use the code/cmedecoder/override.q script to fix this. This script allows users a place to add custom fields before the entries are inserted into the associated tables. 
+
+Add the column to the missingfields parameter and what you would like the column to be overwritten with.
+```
+missingfields:{[x]if[not `TransactTime in key x;x[`TransactTime]:x[`SendingTime]];
+                  if[not `MatchEventIndicator in key x;x[`MatchEventIndicator]:0x0];
+                                x};
+```
 
 ## Data Handling
 The FIX message categories within the CME needed to maintain market information are "d" and "X" - security definition and market data incremental refresh, respectively. The security information includes the standard FIX header, and then identifies the instrument and its features, including those used in maintaining the book (MarketDepth:264, used to maintain book depth, and DisplayFactor:9787, used to convert the FIX message prices to real market values). These messages may contain multiple repeated blocks, e.g. for multiple underlying securities in spread instruments, which must be accounted for in processing. An example definition message is shown below.
