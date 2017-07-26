@@ -34,7 +34,7 @@ singleincr:{[msg]
 / process MarketDataIncrementalRefresh message - convert to single messages and pass to handler
 MARKET_DATA_INCREMENTAL_REFRESH:{[msg]
  / extract header for this message
- header:.fix.incr.headerkeys!msg .fix.incr.headerkeys;
+ header:{[x;y](key[x] inter key[y])#y}[msg;] .fix.incr.headerkeys!msg .fix.incr.headerkeys;
  / determine where to cut to extract individual quotes/trades
  c:where .fix.incr.cutkey=key msg;
  / generate list of single quotes/trades
@@ -42,4 +42,3 @@ MARKET_DATA_INCREMENTAL_REFRESH:{[msg]
  / pass to handler for single messages
  singleincr each msgs;
  }
-

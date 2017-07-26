@@ -28,7 +28,7 @@
    {"I"$x};			/LENGTH
    {x};				/STRING
    {"I"$x};			/SEQNUM
-   {"P"$((8#x),"D",8_x)};	/UTCTIMESTAMP
+   {("D"$8#x)+"T"$8_x};		/UTCTIMESTAMP
    {"D"$x};			/LOCALMKTDATE
    {"I"$x};			/INT
    {`$x};			/CHAR

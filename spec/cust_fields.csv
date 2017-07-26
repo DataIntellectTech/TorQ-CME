@@ -34,3 +34,4 @@ number,name,fixtype
 326,SecurityTradingStatus,SYMBOL
 5797,AggressorSide,SYMBOL
 1174,SecurityTradingEvent,SYMBOL
+107,SecurityDesc,SYMBOL
