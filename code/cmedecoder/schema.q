@@ -78,7 +78,7 @@ savetype:(!) . flip (
 trfieldmaps:(!) . flip (
   `date`TradeDate;
   `time`TransactTime;
-  `sym;(^;`SecurityDesc;`Symbol)); / fill null Symbol with SecurityDesc field
+  (`sym;(^;`SecurityDesc;`Symbol)); / fill null Symbol with SecurityDesc field
   `price`MDEntryPx;
   `size`MDEntrySize;
   `orders`NumberOfOrders;
