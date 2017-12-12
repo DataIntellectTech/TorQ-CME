@@ -2,7 +2,6 @@ number,name,fixtype
 1128,ApplVerID,INT
 5799,MatchEventIndicator,BOOLEANLIST
 1151,SecurityGroup,SYMBOL
-1174,SecurityTradingEvent,INT
 980,SecurityUpdateAction,SYMBOL
 1180,ApplID,STRING
 1300,MarketSegmentID,INT
