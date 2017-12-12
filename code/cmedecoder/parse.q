@@ -10,8 +10,8 @@
  .fix.fields:flip `number`name`fixtype!flip {("I"$x[`$"@number"];`$x[`$"@name"];`$x[`$"@type"])} each fix[`fix][`fields][`field];
 
  / manually add custom CME fields - key & lj to overwrite existing fields
- .fix.fields,:("ISS";enlist ",")0:`:cust_fields.csv;
-
+ .fix.fields:((`number xkey .fix.fields) uj (`number xkey ("ISS";enlist ",")0:`:cust_fields.csv));
+  update number:`u#number from `.fix.fields;
  / generate table with enumerations for fields
  .fix.enums:flip `name`enums`values!flip {(x[0];x[1][`$"@enum"];x[1][`$"@description"])} each c where 0 < count each last flip c:{(`$x[`$"@name"];x[`value])} each fix[`fix][`fields][`field];
 
@@ -19,7 +19,7 @@
  upd:flip exec name,enums:" " vs' enums,values:" " vs' values from ("S**";enlist ",")0:`:cust_enums.csv;
  / combine existing enums with ones from custom file, then uj to enums table, unkeyed & then keyed on first field i.e. name
  {.fix.enums::(1!0!.fix.enums) uj 1!enlist update first name from $[x[`name] in exec name from .fix.enums;x,'exec from .fix.enums where name=x[`name];x]} each upd;
-
+ update name:`u#name,name1:name from `.fix.enums;
  / cd back to top level directory
  system"cd ",getenv[`TORQHOME];
 
