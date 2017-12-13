@@ -19,7 +19,7 @@
  upd:flip exec name,enums:" " vs' enums,values:" " vs' values from ("S**";enlist ",")0:`:cust_enums.csv;
  / combine existing enums with ones from custom file, then uj to enums table, unkeyed & then keyed on first field i.e. name
  {.fix.enums::(1!0!.fix.enums) uj 1!enlist update first name from $[x[`name] in exec name from .fix.enums;x,'exec from .fix.enums where name=x[`name];x]} each upd;
- update name:`u#name,name1:name from `.fix.enums;
+ update name:`u#name from `.fix.enums;
  / cd back to top level directory
  system"cd ",getenv[`TORQHOME];
 
