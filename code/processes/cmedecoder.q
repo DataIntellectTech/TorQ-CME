@@ -8,16 +8,18 @@
 / process one message from log
 msg:{
   / generate dictionary from message, with correct tags & properly typed values
-  msg:(!/) flip {
+  msg:(!/) {
     / get field name & type from tag number
-    d:exec from .fix.fields where number=x[0];
+    d:.fix.fields each x[;0];
     / check if field has enumerations
-    enum:exec from .fix.enums where name=d[`name];
-    val:$[null enum[`name];x[1];enum[`values]@enum[`enums]?x[1]];
+    enum:0!([] name:d`name)#.fix.enums;
+    a:enum[`values]@'enum[`enums]?'x[;1];
+    val:?[""~/:a;x[;1];a];
     / fix field value type
-    val:.fix.typefuncs[d[`fixtype]] val;
+    val:.fix.typefuncs[d`fixtype]@'val;
     (d[`name];val)
-   } each flip "I=\001"0:x;
+    } flip "I=\001"0:x;
+
    / check if msghandler exists
    $[msg[`MsgType] in key .cme;
       [msg:override[msg];
@@ -29,7 +31,6 @@ msg:{
       / if no handler, display warning with msg contents
       [.lg.w[`msg;"Missing msg handler: ",string msg[`MsgType]]
        .lg.w[`msg] each .util.strdict msg]];
-
  }
 
 pipegz:{[gzfile]
