@@ -12,12 +12,12 @@ msg:{
     / get field name & type from tag number
     d:.fix.fields each x[;0];
     / check if field has enumerations
-	enum:0!([] name:d`name)#.fix.enums;
+    enum:0!([] name:d`name)#.fix.enums;
     a:enum[`values]@'enum[`enums]?'x[;1];
     val:?[""~/:a;x[;1];a];
     / fix field value type
     val:.fix.typefuncs[d`fixtype]@'val;
-	(d[`name];val)
+    (d[`name];val)
     } flip "I=\001"0:x;
 
    / check if msghandler exists
