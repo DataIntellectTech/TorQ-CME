@@ -1,47 +1,45 @@
+// parse FIX spec into tables for use in processing
+
+/ initialise tables from spec
 .parse.init:{[]
- / cd into spec directory for reading in files etc
- system"cd ",getenv[`TORQHOME],"/spec";
+  system"cd ",getenv[`TORQHOME],"/spec";                                               // cd into spec directory for reading in files etc
+  fix:.j.k raze system"python xml2json.py -t xml2json FIX44.xml";                      // convert XML to JSON with python script and parse into variable fix
+  jn:`$("@number";"@name";"@type";"@msgtype";"@enum";"@description";"value");          // list of JSON field names
 
- / convert XML to JSON with python script and parse into variable fix
- fix:.j.k raze system"python xml2json.py -t xml2json FIX44.xml";
- / generate dictionary of message types
- msgtypes:(!/) flip {(`$x[`$"@msgtype"];`$x[`$"@name"])} each fix[`fix][`messages][`message];
- / generate table of FIX fields with tag number, field name and data type
- .fix.fields:flip `number`name`fixtype!flip {("I"$x[`$"@number"];`$x[`$"@name"];`$x[`$"@type"])} each fix[`fix][`fields][`field];
+  / fields
+  .fix.fields:flip "ISS"$'flip `number`name`fixtype xcol jn[0 1 2]#/:fix[`fix][`fields][`field]; // generate table of FIX fields with tag number (@number), field name (@name) and data type (@type)
+  .fix.fields:(`number xkey .fix.fields) uj `number xkey ("ISS";enlist ",")0:`:cust_fields.csv;  // manually add custom CME fields
+  update number:`u#number from `.fix.fields;                                                     // apply `u attribute to tag number, for speed up
 
- / manually add custom CME fields - key & lj to overwrite existing fields
- .fix.fields:((`number xkey .fix.fields) uj (`number xkey ("ISS";enlist ",")0:`:cust_fields.csv));
-  update number:`u#number from `.fix.fields;
- / generate table with enumerations for fields
- .fix.enums:flip `name`enums`values!flip {(x[0];x[1][`$"@enum"];x[1][`$"@description"])} each c where 0 < count each last flip c:{(`$x[`$"@name"];x[`value])} each fix[`fix][`fields][`field];
+  / enumerations
+  c:flip[c] where 0<count each last c:value flip jn[1 6]#/:fix[`fix][`fields][`field]; // extract enumeration details (value) for fields, filter to fields with enumerations (count>0)
+  .fix.enums:flip `name`enums`values!flip (`$c[;0]),'.[c;(::;1;jn[4 5])];              // from each enum, extract @enum and @description, join to field name cast to sym
+  upd:select name," "vs'enums," "vs'values from ("S**";enlist ",")0:`:cust_enums.csv;  // read custom enumerations from csv, split enums & values
+  .fix.enums:raze@''`name xgroup .fix.enums,upd;                                       // group together records based on name, raze together to combine upd with .fix.enums
+  update name:`u#name from `.fix.enums;                                                // apply `u attribute to name, for speed up
 
- / add custom enumerations
- upd:flip exec name,enums:" " vs' enums,values:" " vs' values from ("S**";enlist ",")0:`:cust_enums.csv;
- / combine existing enums with ones from custom file, then uj to enums table, unkeyed & then keyed on first field i.e. name
- {.fix.enums::(1!0!.fix.enums) uj 1!enlist update first name from $[x[`name] in exec name from .fix.enums;x,'exec from .fix.enums where name=x[`name];x]} each upd;
- update name:`u#name from `.fix.enums;
- / cd back to top level directory
- system"cd ",getenv[`TORQHOME];
+  system"cd ",getenv[`TORQHOME];                                                       // cd back to top level directory
 
- / dictionary of functions to parse data types
- .fix.typefuncs:`LENGTH`STRING`SEQNUM`UTCTIMESTAMP`LOCALMKTDATE`INT`CHAR`CURRENCY`MONTHYEAR`EXCHANGE`QTY`NUMINGROUP`AMT`FLOAT`PRICE`BOOLEANLIST`SYMBOL`EPOCHDATE! (
-   {"I"$x};			/LENGTH
-   {x};				/STRING
-   {"I"$x};			/SEQNUM
-   {("D"$8#x)+"T"$8_x};		/UTCTIMESTAMP
-   {"D"$x};			/LOCALMKTDATE
-   {"I"$x};			/INT
-   {`$x};			/CHAR
-   {`$x};			/CURRENCY		
-   {`month$"D"$(x,"01")};	/MONTHYEAR
-   {`$x};			/EXCHANGE
-   {"F"$x};			/QTY
-   {"I"$x};			/NUMINGROUP
-   {"F"$x};			/AMT
-   {"F"$x};			/FLOAT
-   {"F"$x};			/PRICE
-   {`byte$$[0<count x;2 sv "1"=x;0]};		/BOOLEANLIST
-   {`$x};			/SYMBOL
-   {1970.01.01+"I"$x}		/EPOCHDATE
-  );
+  / dictionary of functions to parse data types
+  .fix.typefuncs:(!/) flip 2 cut                                                       // define dictionary in convenient list format below
+    (
+    `LENGTH;       {"I"$x};
+    `STRING;       {x};
+    `SEQNUM;       {"I"$x};
+    `UTCTIMESTAMP; {("D"$8#x)+"T"$8_x};
+    `LOCALMKTDATE; {"D"$x};
+    `INT;          {"I"$x};
+    `CHAR;         {`$x};
+    `CURRENCY;     {`$x};
+    `MONTHYEAR;    {`month$"D"$(x,"01")};
+    `EXCHANGE;     {`$x};
+    `QTY;          {"F"$x};
+    `NUMINGROUP;   {"I"$x};
+    `AMT;          {"F"$x};
+    `FLOAT;        {"F"$x};
+    `PRICE;        {"F"$x};
+    `BOOLEANLIST;  {`byte$$[0<count x;2 sv "1"=x;0]};
+    `SYMBOL;       {`$x};
+    `EPOCHDATE;    {1970.01.01+"I"$x}
+    );
  }

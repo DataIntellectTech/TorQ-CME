@@ -1,3 +1,5 @@
+//build book in the "wide" format
+
 .cme.widebook:{[tab]
  t:update MDEntryPx^MDEntryPx*DisplayFactor from tab lj select first DisplayFactor by Symbol from .raw.definitions;
  / extract prices & sizes from book column
@@ -9,7 +11,6 @@
 
  / create temporary book column
  update book:{[state;action;px;lvl;sz;sd;mtch;sym]
-  /if[not first mtch;state:delete from state where side=sd];
   `level xasc $[action=`CHANGE;
     state upsert (lvl;sd;px;sz);
    action=`NEW;
@@ -21,10 +22,10 @@
   /action=`DELETEFROM
     update level-lvl from (delete from state where level<=lvl,side=sd) where level>lvl,side=sd
    ]}\[([level:();side:()] price:();size:());MDUpdateAction;MDEntryPx;MDPriceLevel;MDEntrySize;MDEntryType;MatchEventIndicator;Symbol]
-   by Symbol
-   from update SecurityDesc^Symbol from t;
+ by Symbol
+ from update SecurityDesc^Symbol from t;
    
-   / delete temporary book column, 
-   t:0!select by MsgSeqNum from delete book from t;
-   `..book upsert ?[t;();0b;.schema.qtfieldmaps] lj `sym xcol select underlying:first SecurityGroup by Symbol from .raw.definitions
+ / delete temporary book column
+ t:0!select by MsgSeqNum from delete book from t;
+ `..book upsert ?[t;();0b;.schema.qtfieldmaps] lj `sym xcol select underlying:first SecurityGroup by Symbol from .raw.definitions
   }

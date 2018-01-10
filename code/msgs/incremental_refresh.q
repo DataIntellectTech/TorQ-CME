@@ -1,4 +1,4 @@
-/ functions for handling incremental refresh messages
+// functions for handling incremental refresh messages
 
 / header & cut keys for incremental refresh
 .fix.incr.headerkeys:`TradeDate`MsgSeqNum`SendingTime`TransactTime`MatchEventIndicator`NoMDEntries
@@ -8,14 +8,12 @@
 
 / process a single quote
 singlequote:{[msg]
- / pull out relevant fields, fix types and column names, upsert to global quote table
-  .raw.quote,:(cols .raw.quote)#(first each flip 0#.raw.quote),msg;
-  }
+  .raw.quote,:(cols .raw.quote)#(first each flip 0#.raw.quote),msg;                                // pull out relevant fields, fix types and column names, upsert to global quote table
+ }
 
 / process a single trade
 singletrade:{[msg]
- / pull out relevant fields, fix types and column names, upsert to global quote table
- .raw.trade,:(cols .raw.trade)#(first each flip 0#.raw.trade),msg;
+  .raw.trade,:(cols .raw.trade)#(first each flip 0#.raw.trade),msg;                                // pull out relevant fields, fix types and column names, upsert to global quote table
  } 
 
 / dictionary of handlers for incremental message MDEntryTypes
@@ -23,22 +21,17 @@ singletrade:{[msg]
 
 / process a single incremental refresh message - pass to quote or trade handler, as applicable
 singleincr:{[msg]
- / get handler function, default to recording EntryType
- $[msg[`MDEntryType] in key .fix.incr.handlers;
-    .fix.incr.handlers[msg[`MDEntryType]];
-     {.raw.unhandled,:x[`MDEntryType]}
-     / apply returned function to message
-   ] msg;
+  f:$[msg[`MDEntryType] in key .fix.incr.handlers;                                                 // get handler function, default to recording EntryType
+      .fix.incr.handlers[msg[`MDEntryType]];                                                       // if there's a handler function, use it
+      {.raw.unhandled,:x[`MDEntryType]}                                                            // else record the EntryType in list of unhandled types
+  ];
+  f msg;                                                                                           // apply returned function to message
  }
 
 / process MarketDataIncrementalRefresh message - convert to single messages and pass to handler
 MARKET_DATA_INCREMENTAL_REFRESH:{[msg]
- / extract header for this message
- header:{[x;y](key[x] inter key[y])#y}[msg;] .fix.incr.headerkeys!msg .fix.incr.headerkeys;
- / determine where to cut to extract individual quotes/trades
- c:where .fix.incr.cutkey=key msg;
- / generate list of single quotes/trades
- msgs:header,/:(c cut key msg)!'c cut value msg;
- / pass to handler for single messages
- singleincr each msgs;
+  header:{[x;y](key[x] inter key[y])#y}[msg;] .fix.incr.headerkeys!msg .fix.incr.headerkeys;       // extract header for this message
+  c:where .fix.incr.cutkey=key msg;                                                                // determine where to cut to extract individual quotes/trades
+  msgs:header,/:(c cut key msg)!'c cut value msg;                                                  // generate list of single quotes/trades
+  singleincr each msgs;                                                                            // pass to handler for single messages
  }

@@ -1,5 +1,4 @@
-/ schema for defitions table from "d" msgs, quote table, trade table
-
+// schema for defitions table from "d" msgs, quote table, trade table
 \d .schema
 
 definitions:([] 
