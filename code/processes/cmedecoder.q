@@ -62,6 +62,7 @@ logfile:{[logfile]
 .lg.o[`load;"Attempting to load existing definitions & status tables"];
 sym:@[get;hsym `$getenv[`DBDIR],"/sym";                                   // attempt to load sym file
       {.lg.w[`load;"Failed to load sym file"]}]                           // warn if unable
+.raw.dfltlvl:10                                                           // Add default Price level, for the case if .raw.definitons is empty
 .raw.definitions:select from @[get;hsym `$getenv[`DBDIR],"/rawdefinitions/";                    // attempt to load existing definitions table for further updates
                                {.lg.w[`load;"No definitions table found"];.schema.definitions}] // warn if unable
 .raw.status:select from @[get;hsym `$getenv[`DBDIR],"/rawstatus/";                              // attempt to load existing status table for further updates
