@@ -27,8 +27,8 @@ qtf:{[x;d]
   };
 
 .cme.tallbook:{[qt]
-  d:exec Symbol!.raw.dfltlvl^MarketDepth from .raw.definitions;
-  setbook[d:max value d];
+  d:exec Symbol!MarketDepth from .raw.definitions;
+  setbook[d:$[0=count d:value d;.raw.dfltlvl;max d]];
   `..book upsert ([] date:"d"$(); time:"p"$(); sym:"s"$(); side:"s"$(); level:"i"$(); orders:"i"$(); size:"f"$(); price:"f"$(); msgseq:"i"$(); rptseq:"i"$();  matchevent:"x"$());
   qtf[;d] each qt;
   }
