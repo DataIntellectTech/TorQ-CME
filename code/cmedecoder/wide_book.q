@@ -14,7 +14,7 @@
   `level xasc $[action=`CHANGE;
     state upsert (lvl;sd;px;sz);
    action=`NEW;
-    delete from ((update level+1 from state where level>=lvl,side=sd) upsert (lvl;sd;px;sz)) where level > exec last MarketDepth from .raw.definitions where Symbol = sym;
+    delete from ((update level+1 from state where level>=lvl,side=sd) upsert (lvl;sd;px;sz)) where level > .raw.dfltlvl^exec last MarketDepth from .raw.definitions where Symbol = sym;
    action=`DELETE;
     update level-1 from (delete from state where level=lvl,side=sd) where level>lvl,side=sd;
    action=`DELETETHRU;
