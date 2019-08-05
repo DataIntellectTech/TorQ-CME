@@ -41,7 +41,7 @@ pipegz:{[gzfile]
  }
 
 if[not `files in key .Q.opt .z.x;                                         // Checks if the -files tag is applied properly
-   .lg.w[`files;"-files tag is missing or used improperly"]
+   .lg.w[`files;"-files tag is missing"]
  ];
 
 / process one log file
