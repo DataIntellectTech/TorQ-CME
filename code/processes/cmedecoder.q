@@ -40,6 +40,10 @@ pipegz:{[gzfile]
   system"rm -f fifo";                                                     // remove fifo when done with it
  }
 
+if[not `files in key .Q.opt .z.x;                                         // Checks if the -files tag is applied properly
+   .lg.w[`files;"-files tag is missing"]
+ ];
+
 / process one log file
 logfile:{[logfile]
   if[()~key hsym logfile;                                                 // check file exists
@@ -73,6 +77,12 @@ if[`files in key .proc.params;                                            // if 
  if[0 = count .raw.definitions;                                           // if no definitions after processing files, won't be able to make accurate book, warn
     .lg.w[`definition;"No definitions table found. Cannot build accurate book"]
  ];
+
+ if[0 = count .raw.quote;                                                 // Checks if .raw.quote table is populated to fill order book
+    .lg.w[`rawquote;".raw.quote table is empty"]
+ ];
+
+
  .cme.book .raw.quote;                                                    // process raw quote table into book table
  df:`sym xcol select underlying:first SecurityGroup,first DisplayFactor by Symbol from .raw.definitions;  // get underlying and display factor from definitions table
  trade:?[.raw.trade;();0b;.schema.trfieldmaps] lj df;                     // join underlying & display factor to user-friendly trade table
