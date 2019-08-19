@@ -26,6 +26,6 @@
  from update SecurityDesc^Symbol from t;
    
  / delete temporary book column
- t:0!select by MsgSeqNum from delete book from t;
+ t:0!select by MsgSeqNum,Symbol from delete book from t;
  `..book upsert ?[t;();0b;.schema.qtfieldmaps] lj `sym xcol select underlying:first SecurityGroup by Symbol from .raw.definitions
   }
