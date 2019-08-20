@@ -22,10 +22,12 @@
   /action=`DELETEFROM
     update level-lvl from (delete from state where level<=lvl,side=sd) where level>lvl,side=sd
    ]}\[([level:();side:()] price:();size:());MDUpdateAction;MDEntryPx;MDPriceLevel;MDEntrySize;MDEntryType;MatchEventIndicator;Symbol]
- by Symbol
+ by Symbo
  from update SecurityDesc^Symbol from t;
    
  / delete temporary book column
  t:0!select by MsgSeqNum,Symbol from delete book from t;
+ / To not aggregate events in this case please comment line above and uncomment line below.
+ / t:0!delete book from t;
  `..book upsert ?[t;();0b;.schema.qtfieldmaps] lj `sym xcol select underlying:first SecurityGroup by Symbol from .raw.definitions
   }
