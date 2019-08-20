@@ -275,5 +275,6 @@ date       sym  time                          bprice                            
 2017.01.01 6SH7 2017.01.01D05:57:25.396454768 1.0268 1.0267 1.0266 1.0265 1.0264 1.0263 1.0262 1.0261 1.026  1.0259 5 6 4 4  37 12 3  11 36 3  1.0274 1.0275 1.0276 1.0277 1.0278 1.0279 1...
 ```
 
+It should be noted that building an order book time series from raw FIX messages is open to interpretation. The manner in which events are aggregated ( by Sequence Number ) should be investigated. 
 
 https://github.com/AquaQAnalytics/TorQ
