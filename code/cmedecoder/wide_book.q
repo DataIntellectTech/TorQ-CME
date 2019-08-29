@@ -22,7 +22,7 @@
   /action=`DELETEFROM
     update level-lvl from (delete from state where level<=lvl,side=sd) where level>lvl,side=sd
    ]}\[([level:();side:()] price:();size:());MDUpdateAction;MDEntryPx;MDPriceLevel;MDEntrySize;MDEntryType;MatchEventIndicator;Symbol]
- by Symbo
+ by Symbol
  from update SecurityDesc^Symbol from t;
    
  / delete temporary book column
