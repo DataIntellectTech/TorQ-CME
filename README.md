@@ -105,7 +105,7 @@ The processing of files is called in a similar manner to other TorQ processes (n
 `cmedecoder` is an alias defined in setenv.sh for convenience. The expanded version of the same command is shown below:
 
 ```
-~/cme/deploy$ q torq.q -load code/process/cmedecoder.q -proctype cmedecoder -procname cmedecoder -files sample/sample_20170101.log
+~/cme/deploy$ q torq.q -load code/processes/cmedecoder.q -proctype cmedecoder -procname cmedecoder -files sample/sample_20170101.log
 ```
 The above will process the sample logfile provided and save the data to `hdb`.
 To load the hdb simply run from your TorQ directory `q hdb`.
