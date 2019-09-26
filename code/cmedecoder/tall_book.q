@@ -21,7 +21,7 @@ mdua:(`NEW`CHANGE`DELETE`DELETETHRU`DELETEFROM)!(bk0;bk1;bk2;bk3;bk4)           
 /push to `quote and put the new book in the book state dict
 qtf:{[x;d]
   nbk:mdua[x[`MDUpdateAction]][-1+x`MDPriceLevel;(x`NumberOfOrders;x`MDEntrySize;x`MDEntryPx);x`MDEntryType;tbk:$[sum count each raze tbk:bdict[x`Symbol];tbk;ebk];d];
-  cl:$[`NEW=x`MDUpdateAction;{(x-1)+til 10-(x-1)}x`MDPriceLevel;1];
+  cl:$[`NEW=x`MDUpdateAction;{(x-1)+til 10-(x-1)}x`MDPriceLevel;-1+x`MDPriceLevel];
   `..book insert ((count cl)#'x`TradeDate`TransactTime`Symbol`MDEntryType),(enlist 1+cl),(value nbk[x`MDEntryType;;cl]),(count cl)#'x`MsgSeqNum`RptSeq`MatchEventIndicator;
   bdict[x`Symbol]::nbk
   };
