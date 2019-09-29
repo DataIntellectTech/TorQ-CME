@@ -28,6 +28,7 @@ qtf:{[x;d]
 
 .cme.tallbook:{[qt]
   d:exec Symbol!MarketDepth from .raw.definitions;
+  qt:delete DisplayFactor from update MDEntryPx^MDEntryPx*DisplayFactor from qt lj select first DisplayFactor by Symbol from .raw.definitions;
   setbook[d:$[0=count d:value d;.raw.dfltlvl;max d]];
   `..book upsert ([] date:"d"$(); time:"p"$(); sym:"s"$(); side:"s"$(); level:"i"$(); orders:"i"$(); size:"f"$(); price:"f"$(); msgseq:"i"$(); rptseq:"i"$();  matchevent:"x"$());
   qtf[;d] each qt;
